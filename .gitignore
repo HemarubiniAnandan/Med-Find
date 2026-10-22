@@ -1,0 +1,7 @@
+node_modules/
+mongodb_data/
+medfind.db
+__pycache__/
+.env
+uploads/prescription_*
+*.log
