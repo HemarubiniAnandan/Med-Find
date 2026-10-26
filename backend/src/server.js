@@ -13,10 +13,10 @@ import patientRoutes from './routes/patientRoutes.js';
 import pharmacyRoutes from './routes/pharmacyRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -63,8 +63,8 @@ app.use('/api/patient', patientRoutes);
 app.use('/api/pharmacy', pharmacyRoutes);
 app.use('/api/chat', chatRoutes);
 
-// Root health check
-app.get('/', (req, res) => {
+// API health check
+app.get('/api/health', (req, res) => {
   res.json({
     app: 'MedFind API (MERN Stack) - Real-Time Medicine Stock Locator',
     stack: 'MongoDB + Express.js + React + Node.js',
@@ -73,6 +73,28 @@ app.get('/', (req, res) => {
     database: 'MongoDB connected'
   });
 });
+
+// Serve built React frontend in production
+const frontendDist = path.join(__dirname, '..', '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.json({
+      app: 'MedFind API (MERN Stack) - Real-Time Medicine Stock Locator',
+      stack: 'MongoDB + Express.js + React + Node.js',
+      status: 'online',
+      port: PORT,
+      database: 'MongoDB connected'
+    });
+  });
+}
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
