@@ -69,7 +69,7 @@ export default function App() {
             <span>Single Source Database</span>
             <span>Google Distance Matrix</span>
             <span>Twilio WhatsApp API</span>
-            <span>FastAPI + React</span>
+            <span>MERN Stack</span>
           </div>
         </div>
       </footer>
