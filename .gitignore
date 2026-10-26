@@ -5,3 +5,5 @@ __pycache__/
 .env
 uploads/prescription_*
 *.log
+dist/
+frontend/dist/
